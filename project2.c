@@ -44,46 +44,6 @@ int toStringLowerCase( char string[], int stringLen) {
     }
 }
 
-void swap(int *x,int *y) {
-    
-    int temp;
-    temp = *x;
-    *x = *y;
-    *y = temp;
-}
-
-int choose_pivot(int i,int j ) {
-    
-    return((i+j) /2);
-}
-
-void quicksort(struct tag tags[], int m, int n ) {
-    
-    int key,i,j,k;
-    if( m < n)
-    {
-        k = choose_pivot(m,n);
-        swap(&tags[m],&tags[k]);
-        key = tags[m].frequency;
-        i = m+1;
-        j = n;
-        while(i <= j)
-        {
-            while((i <= n) && (tags[i].frequency <= key))
-                i++;
-            while((j >= m) && (tags[j].frequency > key))
-                j--;
-            if( i < j)
-                swap(&tags[i],&tags[j]);
-        }
-        // swap two elements
-        swap(&tags[m],&tags[j]);
-        // recursively sort the lesser list
-        quicksort(&tags,m,j-1);
-        quicksort(&tags,j+1,n);
-    }
-}
-
 struct tag {
     
     char theTag[31];
@@ -145,10 +105,25 @@ int main () {
         printf("%d\n", tags[k].frequency);
     }
     
-    quicksort(&tags, 0, tagNumber-1);
+    int b, n;
+    struct tag temp;
     
+    for (b=0; b < tagNumber - 1; ++b) {
+        for (n = 0; n < tagNumber - 1 - b; ++n )
+        {
+            if (tags[n].frequency < tags[n+1].frequency)
+            {
+                temp = tags[n+1];
+                tags[n+1] = tags[n];
+                tags[n] = temp;
+            }
+        }
+    }
+    
+    
+    printf("\n\nAfter Sort\n");
     int j;
-    for (k=0; k < tagNumber; k++) {
+    for (k=0; k < 20; k++) {
         printf("%s", tags[k].theTag);
         printf("%d\n", tags[k].frequency);
     }
