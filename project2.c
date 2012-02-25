@@ -44,6 +44,45 @@ int toStringLowerCase( char string[], int stringLen) {
     }
 }
 
+void swap(int *x,int *y) {
+    
+    int temp;
+    temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+int choose_pivot(int i,int j ) {
+    
+    return((i+j) /2);
+}
+
+void quicksort(struct tag tags[], int m, int n ) {
+    
+    int key,i,j,k;
+    if( m < n)
+    {
+        k = choose_pivot(m,n);
+        swap(&tags[m],&tags[k]);
+        key = tags[m].frequency;
+        i = m+1;
+        j = n;
+        while(i <= j)
+        {
+            while((i <= n) && (tags[i].frequency <= key))
+                i++;
+            while((j >= m) && (tags[j].frequency > key))
+                j--;
+            if( i < j)
+                swap(&tags[i],&tags[j]);
+        }
+        // swap two elements
+        swap(&tags[m],&tags[j]);
+        // recursively sort the lesser list
+        quicksort(&tags,m,j-1);
+        quicksort(&tags,j+1,n);
+    }
+}
 
 struct tag {
     
@@ -73,8 +112,7 @@ int main () {
       
       int isStringAlphaTest = isStringAlpha(string, stringLen);
       
-      if ( stringLen > 4 && isStringAlphaTest )
-          {
+      if ( stringLen > 4 && isStringAlphaTest ) {
               
               toStringLowerCase(string, stringLen);
               /*
@@ -83,30 +121,38 @@ int main () {
               printf("%d StringLen\n\n", stringLen);
               */
               
+              int tagAdded = 0;
               int i;              
-              for (i=0; i < tagNumber; i++) {
-                  
-                  if (tags[i].theTag == string) {
+              for (i=0; i < tagNumber+1; i++) {
+                  if (strcmp(tags[i].theTag, string) == 0) {
                       tags[i].frequency = tags[i].frequency + 1;
+                      tagAdded = 1;
                   }
-                  else {
-                      tags[tagNumber].theTag = string;
-                      tags[tagNumber].frequency = 1;
-                      tagNumber++;
-                  }
-                  
               }
               
-              printf("%s", tags[tagNumber].theTag);
-              printf("\n%d\n", tags[tagNumber].frequency);
-              
-               
-          }
-      
-      
+              if (tagAdded == 0) {
+                      strcpy(tags[tagNumber].theTag, string);
+                      tags[tagNumber].frequency = 1;
+                      tagNumber++;
+              }
+      }
   }
-  
   fclose(inFile);
+    
+    int k;
+    for (k=0; k < tagNumber; k++) {
+        printf("%s", tags[k].theTag);
+        printf("%d\n", tags[k].frequency);
+    }
+    
+    quicksort(&tags, 0, tagNumber-1);
+    
+    int j;
+    for (k=0; k < tagNumber; k++) {
+        printf("%s", tags[k].theTag);
+        printf("%d\n", tags[k].frequency);
+    }
+    
     
     return 0;
 
