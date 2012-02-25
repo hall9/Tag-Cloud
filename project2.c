@@ -18,17 +18,19 @@
 #include <math.h>
 #include <ctype.h>
 #include <string.h>
-#include <stdbool.h>
+#define true 1
+#define false 0
+typedef char bool;
 
-int isStringAlpha( char string[], int stringLen ) {
+bool isStringAlpha( char string[], int stringLen ) {
     
-    int hasAllAlpha = 1;
+    int hasAllAlpha = true;
     
     int i;
     for (i=0; i < stringLen-1; i++) {
         
         if ( isalpha(string[i]) == 0 ) {
-            hasAllAlpha = 0;
+            hasAllAlpha = false;
             i = stringLen;
         }
     }
@@ -70,17 +72,11 @@ int main () {
     
       int stringLen = strlen(string);
       
-      int isStringAlphaTest = isStringAlpha(string, stringLen);
+      bool isStringAlphaTest = isStringAlpha(string, stringLen);
       
       if ( stringLen > 4 && isStringAlphaTest ) {
               
               toStringLowerCase(string, stringLen);
-              /*
-              printf("%d\n", isStringAlpha(string, stringLen) );
-              printf("Alpha: %s", string );
-              printf("%d StringLen\n\n", stringLen);
-              */
-              
               int tagAdded = 0;
               int i;              
               for (i=0; i < tagNumber+1; i++) {
@@ -99,20 +95,12 @@ int main () {
   }
   fclose(inFile);
     
-    int k;
-    for (k=0; k < tagNumber; k++) {
-        printf("%s", tags[k].theTag);
-        printf("%d\n", tags[k].frequency);
-    }
-    
     int b, n;
     struct tag temp;
     
     for (b=0; b < tagNumber - 1; ++b) {
-        for (n = 0; n < tagNumber - 1 - b; ++n )
-        {
-            if (tags[n].frequency < tags[n+1].frequency)
-            {
+        for (n = 0; n < tagNumber - 1 - b; ++n ) {
+            if (tags[n].frequency < tags[n+1].frequency) {
                 temp = tags[n+1];
                 tags[n+1] = tags[n];
                 tags[n] = temp;
@@ -120,9 +108,20 @@ int main () {
         }
     }
     
+    int v, c;
+    struct tag temps;
+    for (v=0; v < 20 - 1; ++v) {
+        for (c = 0; c < 20 - 1 - v; ++c ) {
+            if (strcmp(tags[c].theTag, tags[c+1].theTag) >= 1) {
+                temps = tags[c+1];
+                tags[c+1] = tags[c];
+                tags[c] = temps;
+            }
+        }
+    }
     
-    printf("\n\nAfter Sort\n");
-    int j;
+    printf("\nTop 20 Tags: \n");
+    int k;
     for (k=0; k < 20; k++) {
         printf("%s", tags[k].theTag);
         printf("%d\n", tags[k].frequency);
