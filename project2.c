@@ -25,23 +25,29 @@ int isStringAlpha( char string[], int stringLen ) {
     int hasAllAlpha = 1;
     
     int i;
-    for (i=0; i > stringLen; i++) {
-        char stringChar = string[i]; 
+    for (i=0; i < stringLen-1; i++) {
         
-        int isStringCharAlpha = isalpha(stringChar);
-        
-        if ( isStringCharAlpha == 0) {
+        if ( isalpha(string[i]) == 0 ) {
             hasAllAlpha = 0;
+            i = stringLen;
         }
     }
     
     return hasAllAlpha;
 }
 
+int toStringLowerCase( char string[], int stringLen) {
+    
+    int i;
+    for (i=0; i < stringLen-1; i++) {
+        string[i] = tolower(string[i]);
+    }
+}
+
 
 struct tag {
     
-    char thTag[31];
+    char theTag[31];
     int frequency;
 };
 
@@ -56,22 +62,49 @@ int main () {
     exit(-1);
   }
 
+    struct tag tags[501];
+    int tagNumber = 0; 
+    
   printf("Opening the file: %s\n", filename);
-  char wordList[501];
   char string[31];
   while ( fgets(string, 31, inFile) != NULL) {
-      printf( "%s\n", string );
-      
+    
       int stringLen = strlen(string);
       
-      int yesOrNo = isStringCharAlpha(string, stringLen);
+      int isStringAlphaTest = isStringAlpha(string, stringLen);
       
-      printf("%d Yes or no alpha", yesOrNo);
+      if ( stringLen > 4 && isStringAlphaTest )
+          {
+              
+              toStringLowerCase(string, stringLen);
+              /*
+              printf("%d\n", isStringAlpha(string, stringLen) );
+              printf("Alpha: %s", string );
+              printf("%d StringLen\n\n", stringLen);
+              */
+              
+              int i;              
+              for (i=0; i < tagNumber; i++) {
+                  
+                  if (tags[i].theTag == string) {
+                      tags[i].frequency = tags[i].frequency + 1;
+                  }
+                  else {
+                      tags[tagNumber].theTag = string;
+                      tags[tagNumber].frequency = 1;
+                      tagNumber++;
+                  }
+                  
+              }
+              
+              printf("%s", tags[tagNumber].theTag);
+              printf("\n%d\n", tags[tagNumber].frequency);
+              
+               
+          }
       
-   
+      
   }
-    
-    struct tag tags[501]; 
   
   fclose(inFile);
     
