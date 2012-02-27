@@ -5,7 +5,10 @@
  ** Section: cs313-02 spring12
  ** E-mail: hall9@umbc.edu
  **
- **
+ **     This file contails the main driver program for project 2.
+ ** This program read the file specified and reads each word in the file.
+ ** The program then counts the words frequency. It then sorts the whole list
+ ** by highest to lowest. Then orders the top 20 by aplah and prints them out.
  **
  **
  ** Other Files requierd are
@@ -22,6 +25,9 @@
 #define false 0
 typedef char bool;
 
+
+/* This takes in the word(string) and also its length
+    then outputs true if its all alpha or false if not all char are alpha */
 bool isStringAlpha( char string[], int stringLen ) {
     
     int hasAllAlpha = true;
@@ -38,6 +44,9 @@ bool isStringAlpha( char string[], int stringLen ) {
     return hasAllAlpha;
 }
 
+
+/* This takes in the word(string) and also its length
+    then output the word in lower case  */
 int toStringLowerCase( char string[], int stringLen) {
     
     int i;
@@ -46,6 +55,8 @@ int toStringLowerCase( char string[], int stringLen) {
     }
 }
 
+// Create the struct tag
+// which contain the a word and its frequency
 struct tag {
     
     char theTag[31];
@@ -54,6 +65,7 @@ struct tag {
 
 int main () {
 
+    // Asks for file name.
   char filename [101];
   printf("Please input the text file's name: ");
   scanf("%100s", filename);
@@ -63,29 +75,37 @@ int main () {
     exit(-1);
   }
 
+    // create the an array of tags
     struct tag tags[501];
     int tagNumber = 0; 
     
   printf("Opening the file: %s\n", filename);
   char string[31];
+    // Start by reading the file and looking at each word
   while ( fgets(string, 31, inFile) != NULL) {
     
       int stringLen = strlen(string);
       
+      // does the word only contain alpha test
       bool isStringAlphaTest = isStringAlpha(string, stringLen);
       
+      
+      // if word is longer than 4 char & if it only contains alpha
       if ( stringLen > 4 && isStringAlphaTest ) {
               
+                // change to lower case
               toStringLowerCase(string, stringLen);
               int tagAdded = 0;
-              int i;              
+              int i;
+                // if word hasn't been seen before create struct
               for (i=0; i < tagNumber+1; i++) {
                   if (strcmp(tags[i].theTag, string) == 0) {
                       tags[i].frequency = tags[i].frequency + 1;
                       tagAdded = 1;
                   }
               }
-              
+              // if the tag was not just added it must have seen bofore
+                // add one to its frequency
               if (tagAdded == 0) {
                       strcpy(tags[tagNumber].theTag, string);
                       tags[tagNumber].frequency = 1;
@@ -93,11 +113,13 @@ int main () {
               }
       }
   }
+    
   fclose(inFile);
     
     int b, n;
     struct tag temp;
     
+    // Sort the struct array by highest frequency to lowest
     for (b=0; b < tagNumber - 1; ++b) {
         for (n = 0; n < tagNumber - 1 - b; ++n ) {
             if (tags[n].frequency < tags[n+1].frequency) {
@@ -108,6 +130,7 @@ int main () {
         }
     }
     
+    // Sort the top 20 by alpha
     int v, c;
     struct tag temps;
     for (v=0; v < 20 - 1; ++v) {
@@ -120,13 +143,13 @@ int main () {
         }
     }
     
+    // print only the top 20 in the array.
     printf("\nTop 20 Tags: \n");
     int k;
     for (k=0; k < 20; k++) {
         printf("%s", tags[k].theTag);
         printf("%d\n", tags[k].frequency);
     }
-    
     
     return 0;
 
